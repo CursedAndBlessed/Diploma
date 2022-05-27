@@ -23,12 +23,12 @@ public class TodoServer {
                 String json = in.readLine();
                 todos = new Gson().fromJson(json, Todos.class);
 
-                switch (todos.getType()) {
+                switch (TaskStorage.getType()) {
                     case "ADD":
-                        todos.addTask(todos.getTask());
+                        todos.addTask((TaskStorage.getTask()));
                         break;
                     case "REMOVE":
-                        todos.removeTask(todos.getTask());
+                        todos.removeTask((TaskStorage.getTask()));
                         break;
                 }
                 out.println(todos.getAllTasks());
@@ -40,10 +40,10 @@ public class TodoServer {
         }
     }
 
-            public void start() throws IOException {
-            int port = 8989;
-            System.out.println("Starting server at " + port + "...");
+    public void start() throws IOException {
+        int port = 8989;
+        System.out.println("Starting server at " + port + "...");
 
-            //...
-        }
+        //...
     }
+}
