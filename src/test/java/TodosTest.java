@@ -14,21 +14,21 @@ class TodosTests {
         System.out.println("Запуск тестов");
     }
 
+    @AfterAll
+    public static void endTest() {
+        System.out.println("Тесты завершены");
+    }
+
     @BeforeEach
     public void setUp() {
-        System.out.println("Начало тестирования");
+        todos = new Todos();
         String testTask1 = "Сходить в магазин";
         String testTask2 = "Выйти на пробежку";
         String testTask3 = "Работать на дядю";
-        Todos.tasks.add(testTask1);
-        Todos.tasks.add(testTask2);
-        Todos.tasks.add(testTask3);
-        todos = new Todos();
-    }
+        todos.addTask(testTask1);
+        todos.addTask(testTask2);
+        todos.addTask(testTask3);
 
-    @AfterEach
-    public void refresh() {
-        Todos.tasks.clear();
     }
 
 
@@ -48,7 +48,7 @@ class TodosTests {
 
     @Test
     public void getAllTasksTest() {
-        String testStr = "Сходить в магазин Выйти на пробежку Работать на дядю ";
+        String testStr = "Выйти на пробежку Работать на дядю Сходить в магазин ";
         Assertions.assertEquals(testStr, todos.getAllTasks());
     }
 }

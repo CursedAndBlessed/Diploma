@@ -2,7 +2,8 @@ import java.util.*;
 
 
 public class Todos {
-    static ArrayList<String> tasks = new ArrayList<>();
+    private ArrayList<String> tasks = new ArrayList<>();
+
 
     public void addTask(String task) {
         tasks.add(task);

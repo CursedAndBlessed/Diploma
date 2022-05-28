@@ -12,31 +12,33 @@ public class TodoServer {
     public TodoServer(int port, Todos todos) {
         Gson gson = new Gson();
 
-        while (true) {
-            try (ServerSocket serverSocket = new ServerSocket(port);
-                 Socket clientSocket = serverSocket.accept();
-                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            while (true) {
+                try (
+                        Socket clientSocket = serverSocket.accept();
+                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
+                ) {
+                    System.out.println("Соединение установлено");
 
-                System.out.println("Соединение установлено");
+                    String json = in.readLine();
+                    todos = new Gson().fromJson(json, Todos.class);
 
-                String json = in.readLine();
-                todos = new Gson().fromJson(json, Todos.class);
+                    switch (TaskStorage.getType()) {
+                        case "ADD":
+                            todos.addTask((TaskStorage.getTask()));
+                            break;
+                        case "REMOVE":
+                            todos.removeTask((TaskStorage.getTask()));
+                            break;
+                    }
+                    out.println(todos.getAllTasks());
 
-                switch (TaskStorage.getType()) {
-                    case "ADD":
-                        todos.addTask((TaskStorage.getTask()));
-                        break;
-                    case "REMOVE":
-                        todos.removeTask((TaskStorage.getTask()));
-                        break;
                 }
-                out.println(todos.getAllTasks());
-
-            } catch (IOException exception) {
-                System.out.println("Соединение не установлено");
-                exception.printStackTrace();
             }
+        } catch (IOException exception) {
+            System.out.println("Соединение не установлено");
+            exception.printStackTrace();
         }
     }
 
@@ -44,6 +46,5 @@ public class TodoServer {
         int port = 8989;
         System.out.println("Starting server at " + port + "...");
 
-        //...
     }
 }
