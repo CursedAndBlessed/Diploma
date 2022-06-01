@@ -1,20 +1,14 @@
 public class TaskStorage {
+    Type type;
+    String task;
 
-    static String type;
-    static String task;
+    public enum Type {
+        ADD, REMOVE
+    }
 
-    public TaskStorage(String type, String task) {
-        this.task = task;
+    public TaskStorage(Type type, String task) {
         this.type = type;
+        this.task = task;
     }
-
-    public static String getType() {
-        return type;
-    }
-
-    public static String getTask() {
-        return task;
-    }
-
-
 }
+

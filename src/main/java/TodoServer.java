@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 import java.io.*;
@@ -7,10 +8,8 @@ import java.net.Socket;
 
 
 public class TodoServer {
-    //...
-
     public TodoServer(int port, Todos todos) {
-        Gson gson = new Gson();
+        GsonBuilder builder;
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
@@ -21,24 +20,27 @@ public class TodoServer {
                 ) {
                     System.out.println("Соединение установлено");
 
-                    String json = in.readLine();
-                    todos = new Gson().fromJson(json, Todos.class);
-
-                    switch (TaskStorage.getType()) {
-                        case "ADD":
-                            todos.addTask((TaskStorage.getTask()));
-                            break;
-                        case "REMOVE":
-                            todos.removeTask((TaskStorage.getTask()));
-                            break;
+                    while (true) {
+                        String line = in.readLine();
+                        builder = new GsonBuilder();
+                        Gson gson = builder.create();
+                        TaskStorage task = gson.fromJson(line, TaskStorage.class);
+                        if (task.type == TaskStorage.Type.ADD) {
+                            todos.addTask(task.task);
+                            out.println(todos.getAllTasks());
+                        } else if (task.type == TaskStorage.Type.REMOVE) {
+                            todos.removeTask(task.task);
+                            out.println(todos.getAllTasks());
+                        }
                     }
-                    out.println(todos.getAllTasks());
-
+                } catch (Exception exception) {
+                    System.out.println(exception);
                 }
             }
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             System.out.println("Соединение не установлено");
             exception.printStackTrace();
+
         }
     }
 

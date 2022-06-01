@@ -25,7 +25,8 @@ public class Todos {
     }
 
     public ArrayList<String> getListTask() {
-        return tasks;
+        return this.tasks;
     }
+
 
 }
